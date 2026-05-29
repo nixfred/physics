@@ -52,6 +52,12 @@ const articles = defineCollection({
       status: z.enum(['published', 'drafting', 'planned']).default('planned'),
       order: z.number(),
 
+      // Publication dates power Article structured data (datePublished /
+      // dateModified), article:* OpenGraph tags, sitemap lastmod, and the RSS
+      // feed. Optional so planned teasers can omit them.
+      publishDate: z.coerce.date().optional(),
+      updatedDate: z.coerce.date().optional(),
+
       // Asset slots. Filenames are placeholders; drop real images into
       // /public/assets/ and they appear. Strings (not image()) so planned
       // articles can reference files that don't exist on disk yet.

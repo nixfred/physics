@@ -18,9 +18,72 @@ const isPublished = data.status === 'published';
 const related = await getRelated(article);
 const { Content } = await render(article);
 const theme = data.themeColor;
+
+// SEO inputs derived from frontmatter.
+const publishedTime = data.publishDate?.toISOString();
+const modifiedTime = (data.updatedDate ?? data.publishDate)?.toISOString();
+const section = data.cluster ?? 'Frontiers of Physics';
+const articleUrl = new URL(`/articles/${article.id}/`, Astro.site).href;
+const siteHref = Astro.site!.href;
+
+// Intrinsic hero dimensions prevent layout shift (CLS / Core Web Vitals).
+let heroDims: { w: number; h: number } | null = null;
+if (data.heroImage) {
+  try {
+    const sharp = (await import('sharp')).default;
+    const meta = await sharp(`public${data.heroImage}`).metadata();
+    if (meta.width && meta.height) heroDims = { w: meta.width, h: meta.height };
+  } catch {
+    // image not on disk yet (planned teaser) — fall through to placeholder
+  }
+}
+
+// Breadcrumb trail for rich results.
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteHref },
+    { '@type': 'ListItem', position: 2, name: 'The Mysteries', item: `${siteHref}#mystery-map` },
+    { '@type': 'ListItem', position: 3, name: data.title, item: articleUrl },
+  ],
+};
+
+// FAQ rich result from the article's Observatory station (a real Q with a real
+// known/unknown answer). Only emitted when the station exists.
+const faqJsonLd = data.station
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: data.station.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `What we know: ${data.station.known} What we do not: ${data.station.unknown}`,
+          },
+        },
+      ],
+    }
+  : null;
+
+const extraJsonLd = [breadcrumbJsonLd, ...(faqJsonLd ? [faqJsonLd] : [])];
 ---
 
-<Layout title={data.title} description={data.summary ?? data.shortHook} type="article" ogImage={data.heroImage ?? '/assets/og-default.png'}>
+<Layout
+  title={data.title}
+  description={data.summary ?? data.shortHook}
+  type="article"
+  ogImage={data.heroImage ?? '/assets/og-default.png'}
+  imageAlt={data.subtitle ?? data.title}
+  keywords={data.tags}
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  section={section}
+  tags={data.tags}
+  jsonLd={extraJsonLd}
+>
   <Nav />
   <main id="main">
     <!-- Hero -->
@@ -46,7 +109,9 @@ const theme = data.themeColor;
       {data.heroImage ? (
         <img
           src={data.heroImage}
-          alt={data.title}
+          alt={`Infographic: ${data.title}`}
+          width={heroDims?.w}
+          height={heroDims?.h}
           class="mt-10 w-full rounded-2xl border border-line"
           loading="eager"
           decoding="async"
