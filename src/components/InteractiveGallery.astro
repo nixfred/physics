@@ -11,7 +11,7 @@ const { articles } = Astro.props;
 <div class="grid gap-6 sm:grid-cols-2">
   {articles.map((a) => (
     <article class="reveal glass glass-hover group flex flex-col overflow-hidden rounded-2xl">
-      <div class="img-slot aspect-[16/10]" style={`--theme:${a.data.themeColor}`}>
+      <div class={`img-slot aspect-[16/10] ${a.data.thumbnailImage ? 'has-img' : ''}`} style={`--theme:${a.data.themeColor}`}>
         {a.data.thumbnailImage ? (
           <img src={a.data.thumbnailImage} alt={a.data.title} loading="lazy" decoding="async" />
         ) : (

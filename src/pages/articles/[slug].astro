@@ -42,14 +42,20 @@ const theme = data.themeColor;
         <p class="mt-5 text-lg text-paper/85">{data.longHook ?? data.shortHook}</p>
       </header>
 
-      <!-- Key visual -->
-      <div class="img-slot mt-10 aspect-[21/9] w-full rounded-2xl" style={`--theme:${theme}`}>
-        {data.heroImage ? (
-          <img src={data.heroImage} alt={data.title} />
-        ) : (
-          <span>hero image · {data.heroImage?.split('/').pop() ?? 'pending'}</span>
-        )}
-      </div>
+      <!-- Key visual: infographics shown whole (never cropped) -->
+      {data.heroImage ? (
+        <img
+          src={data.heroImage}
+          alt={data.title}
+          class="mt-10 w-full rounded-2xl border border-line"
+          loading="eager"
+          decoding="async"
+        />
+      ) : (
+        <div class="img-slot mt-10 aspect-[21/9] w-full rounded-2xl" style={`--theme:${theme}`}>
+          <span>hero image · pending</span>
+        </div>
+      )}
     </article>
 
     <div class="container-edge mt-14 grid gap-12 lg:grid-cols-[1fr_320px]">

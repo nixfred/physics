@@ -152,7 +152,15 @@ h4,
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* contain so infographics are never cropped (titles live at the top) */
+  object-fit: contain;
+  object-position: center;
+}
+/* When a real image is in the slot, drop the placeholder striping/dashes. */
+.img-slot.has-img {
+  background: #04060d;
+  border-style: solid;
+  border-color: var(--color-line);
 }
 
 .text-glow {
