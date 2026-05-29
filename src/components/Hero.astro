@@ -3,13 +3,10 @@
 ---
 
 <section class="relative flex min-h-[92vh] items-center overflow-hidden" aria-label="Hero">
-  <!-- Spacetime grid that bends toward the compact object -->
-  <div class="spacetime-grid" aria-hidden="true"></div>
-  <!-- Central compact object -->
-  <div class="compact-object" aria-hidden="true">
-    <div class="co-core"></div>
-    <div class="co-glow"></div>
-    <div class="co-ring"></div>
+  <!-- Photographic observatory plate (Milky Way over a working observatory) -->
+  <div class="hero-photo" aria-hidden="true">
+    <img src="/assets/observatory-hero.webp" alt="" loading="eager" decoding="async" />
+    <div class="hero-scrim"></div>
   </div>
 
   <div class="container-edge relative z-10 grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:items-center">
@@ -66,71 +63,30 @@
 </section>
 
 <style>
-  .spacetime-grid {
-    position: absolute;
-    inset: -20% -10% -40% -10%;
-    background-image:
-      linear-gradient(rgba(79, 156, 255, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(79, 156, 255, 0.08) 1px, transparent 1px);
-    background-size: 60px 60px;
-    transform: perspective(700px) rotateX(62deg) translateY(10%);
-    mask-image: radial-gradient(ellipse 60% 60% at 70% 45%, black, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse 60% 60% at 70% 45%, black, transparent 75%);
-    opacity: calc(0.5 + var(--confidence) * 0.5);
-  }
-
-  .compact-object {
-    position: absolute;
-    right: 14%;
-    top: 38%;
-    width: 320px;
-    height: 320px;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-  @media (max-width: 1023px) {
-    .compact-object { right: -10%; top: 20%; opacity: 0.45; }
-  }
-  .co-core {
-    position: absolute;
-    inset: 42%;
-    border-radius: 50%;
-    background: radial-gradient(circle at 40% 35%, #ffffff, #8cc0ff 40%, #4f9cff 70%);
-    box-shadow:
-      0 0 30px 6px rgba(140, 192, 255, 0.9),
-      0 0 80px 24px rgba(79, 156, 255, 0.5);
-  }
-  .co-glow {
-    position: absolute;
-    inset: 10%;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(124, 92, 255, 0.35), transparent 60%);
-    animation: pulse-glow 6s ease-in-out infinite;
-  }
-  .co-ring {
+  .hero-photo {
     position: absolute;
     inset: 0;
-    border-radius: 50%;
-    border: 1px solid rgba(140, 170, 255, 0.25);
-    box-shadow: inset 0 0 40px rgba(79, 156, 255, 0.2);
-    animation: spin 28s linear infinite;
+    z-index: 0;
   }
-  .co-ring::after {
-    content: '';
+  .hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 60% center;
+  }
+  .hero-scrim {
     position: absolute;
-    inset: 14%;
-    border-radius: 50%;
-    border-top: 1px solid rgba(255, 180, 84, 0.4);
-    border-left: 1px solid rgba(124, 92, 255, 0.3);
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(4, 6, 13, 0.92) 0%, rgba(4, 6, 13, 0.6) 42%, rgba(4, 6, 13, 0.2) 100%),
+      linear-gradient(to bottom, rgba(4, 6, 13, 0.45) 0%, transparent 28%, transparent 58%, #04060d 100%);
   }
   .scroll-cue { display: grid; place-items: start center; padding-top: 6px; }
   .scroll-cue span { animation: cue 1.8s ease-in-out infinite; }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes pulse-glow { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
   @keyframes cue { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(12px); opacity: 0; } 100% { opacity: 0; } }
 
   @media (prefers-reduced-motion: reduce) {
-    .co-glow, .co-ring, .scroll-cue span { animation: none; }
+    .scroll-cue span { animation: none; }
   }
 </style>
