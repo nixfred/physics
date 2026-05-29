@@ -1,0 +1,68 @@
+---
+import type { Article } from '../lib/articles';
+import { knownUnknownScore } from '../lib/articles';
+
+export interface Props {
+  articles: Article[];
+}
+const { articles } = Astro.props;
+---
+
+<ol class="descent relative mx-auto max-w-3xl">
+  {articles.map((a, i) => (
+    <li class="reveal descent-node relative">
+      <a
+        href={`/articles/${a.id}`}
+        class="group flex items-start gap-5 rounded-2xl border border-transparent p-4 transition-colors hover:border-line hover:bg-white/[0.02] focus-visible:border-line"
+        style={`--theme:${a.data.themeColor}`}
+      >
+        <span class="node-dot" aria-hidden="true"></span>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-xs text-muted">{String(a.data.order).padStart(2, '0')}</span>
+            {a.data.status !== 'published' && (
+              <span class="rounded-full border border-amber/40 bg-amber/10 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-amber">
+                Field report pending
+              </span>
+            )}
+          </div>
+          <h3 class="mt-1 font-display text-lg font-semibold leading-snug text-paper group-hover:text-glow">{a.data.title}</h3>
+          <p class="mt-1 text-sm text-muted">{a.data.shortHook}</p>
+          <div class="mt-3 flex items-center gap-3 font-mono text-[0.65rem] text-muted">
+            <span class="rounded border border-line px-2 py-0.5">KU {knownUnknownScore(a)}/10</span>
+            <span class="opacity-0 transition-opacity group-hover:opacity-100">enter →</span>
+          </div>
+        </div>
+      </a>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .descent::before {
+    content: '';
+    position: absolute;
+    left: calc(1rem + 7px);
+    top: 1.5rem;
+    bottom: 1.5rem;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(140, 170, 255, 0.35), rgba(124, 92, 255, 0.35), transparent);
+  }
+  .node-dot {
+    position: relative;
+    z-index: 1;
+    margin-top: 0.35rem;
+    flex: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-void);
+    border: 2px solid var(--theme, #4f9cff);
+    box-shadow: 0 0 0 4px rgba(4, 6, 13, 1), 0 0 16px var(--theme, #4f9cff);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .group:hover .node-dot {
+    transform: scale(1.25);
+    box-shadow: 0 0 0 4px rgba(4, 6, 13, 1), 0 0 26px var(--theme, #4f9cff);
+  }
+</style>

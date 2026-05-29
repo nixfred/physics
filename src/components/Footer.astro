@@ -1,0 +1,36 @@
+---
+const year = 2026;
+---
+
+<footer id="footer" class="relative mt-32 border-t border-line">
+  <div class="container-edge py-16">
+    <div class="glass rounded-3xl p-8 md:p-12">
+      <div class="mb-8 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted">
+        <span class="inline-block h-2 w-2 animate-pulse rounded-full bg-amber"></span>
+        Observatory panel — closing readout
+      </div>
+      <div class="grid gap-8 md:grid-cols-[1.4fr_1fr]">
+        <div>
+          <p class="font-display text-2xl font-bold leading-snug text-paper md:text-3xl">
+            Built for the curious.<br />
+            Facts matter.<br />
+            Wonder permitted.<br />
+            <span class="text-muted">Certainty sold separately.</span>
+          </p>
+        </div>
+        <div class="flex flex-col justify-end gap-3 font-mono text-xs text-muted">
+          <div class="flex justify-between border-b border-line pb-2">
+            <span>KNOWN PHYSICS</span><span class="text-neutron">ACTIVE</span>
+          </div>
+          <div class="flex justify-between border-b border-line pb-2">
+            <span>UNKNOWN PHYSICS</span><span class="text-amber">DETECTED</span>
+          </div>
+          <div class="flex justify-between border-b border-line pb-2">
+            <span>CONFIDENCE</span><span>DEPENDS WHO YOU ASK</span>
+          </div>
+          <p class="pt-4 text-muted/70">© {year} · A public science project.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

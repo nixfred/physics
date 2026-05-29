@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Lost past the edge of the map">
+  <Nav />
+  <main id="main" class="container-edge flex min-h-[70vh] flex-col items-center justify-center text-center">
+    <p class="font-mono text-sm uppercase tracking-[0.3em] text-amber">Error 404</p>
+    <h1 class="mt-4 font-display text-5xl font-bold text-paper text-glow sm:text-6xl">You drifted past the edge of the map.</h1>
+    <p class="mt-5 max-w-xl text-lg text-muted">
+      This page is in the mass gap: somewhere between a real URL and a black hole. Very professional, universe.
+    </p>
+    <a href="/" class="mt-8 rounded-xl bg-neutron px-6 py-3 font-display font-semibold text-void transition-transform hover:scale-[1.03]">
+      Return to known physics
+    </a>
+  </main>
+  <Footer />
+</Layout>

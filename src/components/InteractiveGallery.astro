@@ -1,0 +1,42 @@
+---
+import type { Article } from '../lib/articles';
+import { knownUnknownScore } from '../lib/articles';
+
+export interface Props {
+  articles: Article[];
+}
+const { articles } = Astro.props;
+---
+
+<div class="grid gap-6 sm:grid-cols-2">
+  {articles.map((a) => (
+    <article class="reveal glass glass-hover group flex flex-col overflow-hidden rounded-2xl">
+      <div class="img-slot aspect-[16/10]" style={`--theme:${a.data.themeColor}`}>
+        {a.data.thumbnailImage ? (
+          <img src={a.data.thumbnailImage} alt={a.data.title} loading="lazy" decoding="async" />
+        ) : (
+          <span>image · {a.data.thumbnailImage?.split('/').pop() ?? 'pending'}</span>
+        )}
+        <span
+          class="absolute right-3 top-3 inline-block h-2.5 w-2.5 rounded-full"
+          style={`background:${a.data.themeColor}; box-shadow:0 0 12px ${a.data.themeColor}`}
+        ></span>
+      </div>
+      <div class="flex flex-1 flex-col p-5">
+        <h3 class="font-display text-lg font-semibold leading-snug text-paper">{a.data.title}</h3>
+        <p class="mt-2 flex-1 text-sm text-muted">{a.data.shortHook}</p>
+        <div class="mt-4 flex items-center gap-3 font-mono text-[0.65rem] text-muted">
+          <span class="rounded border border-line px-2 py-0.5">KU {knownUnknownScore(a)}/10</span>
+          <span class="rounded border border-line px-2 py-0.5 capitalize">{a.data.difficultyLevel}</span>
+        </div>
+        <a
+          href={`/articles/${a.id}`}
+          class="mt-5 inline-flex items-center gap-2 self-start rounded-lg border border-line px-4 py-2 text-sm font-semibold text-paper transition-colors group-hover:border-neutron group-hover:text-neutron"
+        >
+          Open Field Note
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </article>
+  ))}
+</div>

@@ -1,0 +1,40 @@
+---
+export interface Props {
+  label: string;
+  value: number; // 0–11
+  color?: string;
+}
+const { label, value, color = '#4f9cff' } = Astro.props;
+const pct = Math.min(Math.max(value, 0), 11) / 11 * 100;
+const overflow = value > 10;
+const display = value % 1 === 0 ? value.toString() : value.toFixed(1);
+---
+
+<div class="meter">
+  <div class="mb-1.5 flex items-baseline justify-between gap-3">
+    <span class="text-sm text-paper/90">{label}</span>
+    <span class="font-mono text-xs" style={`color:${overflow ? '#ff6b6b' : color}`}>
+      {display}<span class="text-muted">/10</span>
+    </span>
+  </div>
+  <div class="h-2 overflow-hidden rounded-full bg-white/[0.06]" role="meter" aria-valuenow={value} aria-valuemin={0} aria-valuemax={10} aria-label={label}>
+    <div
+      class="meter-fill h-full rounded-full"
+      style={`--w:${pct}%; background:linear-gradient(90deg, ${color}, ${overflow ? '#ff6b6b' : color}); box-shadow:0 0 12px ${color}88`}
+    ></div>
+  </div>
+</div>
+
+<style>
+  .meter-fill {
+    width: var(--w);
+    animation: grow 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  @keyframes grow {
+    from { width: 0; }
+    to { width: var(--w); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .meter-fill { animation: none; }
+  }
+</style>

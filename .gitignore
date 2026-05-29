@@ -1,0 +1,24 @@
+# build output
+dist/
+.output/
+
+# deps
+node_modules/
+
+# astro
+.astro/
+
+# env / secrets — never commit
+.env
+.env.*
+.dev.vars
+
+# wrangler
+.wrangler/
+
+# os / editor
+.DS_Store
+*.log
+npm-debug.log*
+.vscode/
+.idea/

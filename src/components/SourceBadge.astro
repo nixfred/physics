@@ -1,0 +1,23 @@
+---
+export interface Props {
+  badge: 'measured' | 'inferred' | 'model-dependent' | 'hypothesis' | 'speculative';
+}
+const { badge } = Astro.props;
+
+const meta: Record<string, { label: string; color: string }> = {
+  measured: { label: 'Measured', color: '#4f9cff' },
+  inferred: { label: 'Inferred', color: '#34d3c0' },
+  'model-dependent': { label: 'Model Dependent', color: '#a06bff' },
+  hypothesis: { label: 'Hypothesis', color: '#ffb454' },
+  speculative: { label: 'Speculative', color: '#ff6b6b' },
+};
+const m = meta[badge] ?? meta.inferred;
+---
+
+<span
+  class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider"
+  style={`border-color:${m.color}55; color:${m.color}; background:${m.color}12`}
+>
+  <span class="inline-block h-1.5 w-1.5 rounded-full" style={`background:${m.color}`}></span>
+  {m.label}
+</span>

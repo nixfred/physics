@@ -1,0 +1,39 @@
+---
+import SourceBadge from './SourceBadge.astro';
+
+export interface Props {
+  citation: {
+    id: string;
+    title: string;
+    author?: string;
+    organization?: string;
+    url?: string;
+    dateAccessed?: string;
+    note?: string;
+    usedFor?: string;
+    badge: 'measured' | 'inferred' | 'model-dependent' | 'hypothesis' | 'speculative';
+  };
+  index: number;
+}
+const { citation: c, index } = Astro.props;
+---
+
+<li id={`cite-${c.id}`} class="glass glass-hover rounded-xl p-4">
+  <div class="mb-2 flex items-start justify-between gap-3">
+    <span class="font-mono text-xs text-muted">[{index}]</span>
+    <SourceBadge badge={c.badge} />
+  </div>
+  <h3 class="font-display text-base font-semibold leading-snug text-paper">
+    {c.url ? (
+      <a href={c.url} target="_blank" rel="noopener noreferrer" class="hover:text-neutron">{c.title}</a>
+    ) : (
+      c.title
+    )}
+  </h3>
+  <p class="mt-1 text-sm text-muted">
+    {[c.author, c.organization].filter(Boolean).join(' · ')}
+  </p>
+  {c.usedFor && <p class="mt-2 text-sm text-paper/80"><span class="text-muted">Used for: </span>{c.usedFor}</p>}
+  {c.note && <p class="mt-1 text-sm text-muted italic">{c.note}</p>}
+  {c.dateAccessed && <p class="mt-2 font-mono text-[0.65rem] text-muted/70">Accessed {c.dateAccessed}</p>}
+</li>

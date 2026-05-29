@@ -1,0 +1,154 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import KnownUnknownMeter from '../../components/KnownUnknownMeter.astro';
+import CitationCard from '../../components/CitationCard.astro';
+import { render } from 'astro:content';
+import { getArticles, getRelated, meterEntries, knownUnknownScore } from '../../lib/articles';
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  return articles.map((article) => ({ params: { slug: article.id }, props: { article } }));
+}
+
+const { article } = Astro.props;
+const data = article.data;
+const isPublished = data.status === 'published';
+const related = await getRelated(article);
+const { Content } = await render(article);
+const theme = data.themeColor;
+---
+
+<Layout title={data.title} description={data.summary ?? data.shortHook} type="article" ogImage={data.heroImage ?? '/assets/og-default.png'}>
+  <Nav />
+  <main id="main">
+    <!-- Hero -->
+    <article class="container-edge pt-16">
+      <a href="/#mystery-map" class="font-mono text-xs text-muted transition-colors hover:text-neutron">← Return to Map</a>
+
+      <header class="mt-6 max-w-3xl">
+        <div class="mb-4 flex flex-wrap items-center gap-3 font-mono text-xs">
+          <span class="text-muted">{String(data.order).padStart(2, '0')}</span>
+          {isPublished ? (
+            <span class="rounded-full px-2.5 py-0.5 uppercase tracking-wider" style={`color:${theme}; border:1px solid ${theme}55; background:${theme}14`}>Published</span>
+          ) : (
+            <span class="rounded-full border border-amber/40 bg-amber/10 px-2.5 py-0.5 uppercase tracking-wider text-amber">Field report pending</span>
+          )}
+          <span class="rounded-full border border-line px-2.5 py-0.5 capitalize text-muted">{data.difficultyLevel}</span>
+        </div>
+        <h1 class="font-display text-4xl font-bold leading-[1.02] text-paper text-glow sm:text-5xl">{data.title}</h1>
+        {data.subtitle && <p class="mt-4 text-xl text-muted">{data.subtitle}</p>}
+        <p class="mt-5 text-lg text-paper/85">{data.longHook ?? data.shortHook}</p>
+      </header>
+
+      <!-- Key visual -->
+      <div class="img-slot mt-10 aspect-[21/9] w-full rounded-2xl" style={`--theme:${theme}`}>
+        {data.heroImage ? (
+          <img src={data.heroImage} alt={data.title} />
+        ) : (
+          <span>hero image · {data.heroImage?.split('/').pop() ?? 'pending'}</span>
+        )}
+      </div>
+    </article>
+
+    <div class="container-edge mt-14 grid gap-12 lg:grid-cols-[1fr_320px]">
+      <!-- Body -->
+      <div class="min-w-0">
+        {isPublished ? (
+          <div class="article-body max-w-2xl">
+            <Content />
+          </div>
+        ) : (
+          <div class="glass max-w-2xl rounded-2xl p-8">
+            <h2 class="font-display text-2xl font-semibold text-paper">Field report pending</h2>
+            <p class="mt-3 text-muted">{data.summary}</p>
+            {data.keyQuestions.length > 0 && (
+              <div class="mt-6">
+                <p class="font-mono text-xs uppercase tracking-widest text-amber">Expected concepts</p>
+                <ul class="mt-3 space-y-2 text-paper/85">
+                  {data.keyQuestions.map((q) => (
+                    <li class="flex gap-2"><span style={`color:${theme}`}>?</span><span>{q}</span></li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <div class="mt-6 rounded-xl border border-line bg-white/[0.02] p-4 text-sm text-muted">
+              <p class="font-mono text-xs uppercase tracking-widest text-muted">Citation requirements</p>
+              <p class="mt-2">When this report is written, every measured or inferred claim will ship with a source and a confidence badge. No exceptions.</p>
+            </div>
+            <a href="/#mystery-map" class="mt-8 inline-flex rounded-lg border border-line px-4 py-2 text-sm font-semibold text-paper transition-colors hover:border-neutron hover:text-neutron">← Return to Map</a>
+          </div>
+        )}
+
+        {isPublished && data.citations.length > 0 && (
+          <section class="mt-14 max-w-2xl">
+            <h2 class="font-display text-2xl font-semibold text-paper">Sources &amp; Citations</h2>
+            <ol class="mt-5 grid list-none gap-4">
+              {data.citations.map((c, i) => <CitationCard citation={c} index={i + 1} />)}
+            </ol>
+          </section>
+        )}
+      </div>
+
+      <!-- Sidebar: Known Unknown Index + related -->
+      <aside class="space-y-8 lg:sticky lg:top-24 lg:self-start">
+        <div class="glass rounded-2xl p-6">
+          <div class="mb-5 flex items-baseline justify-between">
+            <h2 class="font-display text-lg font-semibold text-paper">Known Unknown Index</h2>
+            <span class="font-mono text-sm" style={`color:${theme}`}>{knownUnknownScore(article)}/10</span>
+          </div>
+          <div class="space-y-4">
+            {meterEntries(article).map((m) => (
+              <KnownUnknownMeter label={m.label} value={m.value} color={theme} />
+            ))}
+          </div>
+          {data.theoryStressNote && (
+            <p class="mt-5 border-t border-line pt-4 font-mono text-xs text-muted">{data.theoryStressNote}</p>
+          )}
+        </div>
+
+        {related.length > 0 && (
+          <div class="glass rounded-2xl p-6">
+            <h2 class="mb-4 font-display text-lg font-semibold text-paper">Related</h2>
+            <ul class="space-y-3">
+              {related.map((r) => (
+                <li>
+                  <a href={`/articles/${r.id}`} class="group block">
+                    <span class="text-sm text-paper transition-colors group-hover:text-neutron">{r.data.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </aside>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .article-body :global(h2) {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--color-paper);
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .article-body :global(h3) {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--color-paper);
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .article-body :global(p) {
+    color: rgba(232, 238, 252, 0.85);
+    margin-bottom: 1.1rem;
+  }
+  .article-body :global(strong) { color: var(--color-paper); }
+  .article-body :global(a) { color: var(--color-neutron); text-decoration: underline; text-underline-offset: 3px; }
+  .article-body :global(ul) { margin: 0 0 1.1rem 1.25rem; list-style: disc; color: rgba(232, 238, 252, 0.85); }
+</style>
