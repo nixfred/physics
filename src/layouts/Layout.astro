@@ -19,17 +19,28 @@ const {
   noStarfield = false,
 } = Astro.props;
 
-const pageTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — The Edge of Known Physics`;
+const pageTitle = title ? `${title} · ${SITE_NAME}` : `${SITE_NAME} · The Edge of Known Physics`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImageUrl = new URL(ogImage, Astro.site).href;
 
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: SITE_NAME,
-  description,
-  url: Astro.site?.href,
-};
+const structuredData =
+  type === 'article'
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: title ?? SITE_NAME,
+        description,
+        image: ogImageUrl,
+        url: canonical,
+        isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: Astro.site?.href },
+      }
+    : {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: SITE_NAME,
+        description,
+        url: Astro.site?.href,
+      };
 ---
 
 <!doctype html>
@@ -79,7 +90,7 @@ const structuredData = {
     <slot />
 
     <script>
-      // Scroll reveal — IntersectionObserver, reduced-motion safe (CSS handles fallback)
+      // Scroll reveal: IntersectionObserver, reduced-motion safe (CSS handles fallback)
       const els = document.querySelectorAll('.reveal');
       if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver(

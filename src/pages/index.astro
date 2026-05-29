@@ -15,7 +15,7 @@ const articles = await getArticles();
 const cluster = await getCluster('The Neutron Star Problem');
 const flagship = articles[0];
 
-// Observatory Mode stations — derived from every article's `station:` block,
+// Observatory Mode stations, derived from every article's `station:` block,
 // flattened to a plain serializable array for the React island.
 const stations = (await getStations()).map((a) => ({
   order: a.data.order,

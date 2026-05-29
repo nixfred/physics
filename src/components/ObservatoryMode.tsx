@@ -15,7 +15,7 @@ export interface Station {
 }
 
 /**
- * Observatory Mode — an immersive, full-screen guided descent through the
+ * Observatory Mode: an immersive, full-screen guided descent through the
  * mysteries, one station at a time. Driven entirely by article `station:`
  * blocks, so new articles add stations for free.
  *
@@ -123,6 +123,7 @@ export default function ObservatoryMode({ stations }: { stations: Station[] }) {
                           idx === i ? s.themeColor : idx < i ? `${s.themeColor}77` : 'rgba(255,255,255,0.12)',
                       }}
                       title={`Station ${String(s.order).padStart(2, '0')}`}
+                      tabIndex={-1}
                     />
                   </li>
                 ))}

@@ -25,7 +25,7 @@ const { citation: c, index } = Astro.props;
   </div>
   <h3 class="font-display text-base font-semibold leading-snug text-paper">
     {c.url ? (
-      <a href={c.url} target="_blank" rel="noopener noreferrer" class="hover:text-neutron">{c.title}</a>
+      <a href={c.url} target="_blank" rel="noopener noreferrer" class="hover:text-neutron">{c.title}<span class="sr-only"> (opens in a new tab)</span></a>
     ) : (
       c.title
     )}
@@ -35,5 +35,5 @@ const { citation: c, index } = Astro.props;
   </p>
   {c.usedFor && <p class="mt-2 text-sm text-paper/80"><span class="text-muted">Used for: </span>{c.usedFor}</p>}
   {c.note && <p class="mt-1 text-sm text-muted italic">{c.note}</p>}
-  {c.dateAccessed && <p class="mt-2 font-mono text-[0.65rem] text-muted/70">Accessed {c.dateAccessed}</p>}
+  {c.dateAccessed && <p class="mt-2 font-mono text-[0.7rem] text-muted">Accessed {c.dateAccessed}</p>}
 </li>
