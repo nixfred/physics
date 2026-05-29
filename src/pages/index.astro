@@ -8,11 +8,27 @@ import MysteryTimeline from '../components/MysteryTimeline.astro';
 import KnownUnknownMeter from '../components/KnownUnknownMeter.astro';
 import CitationCard from '../components/CitationCard.astro';
 import ConfidenceSlider from '../components/ConfidenceSlider.tsx';
-import { getArticles, getCluster, meterEntries, knownUnknownScore } from '../lib/articles';
+import ObservatoryMode from '../components/ObservatoryMode.tsx';
+import { getArticles, getCluster, getStations, meterEntries, knownUnknownScore } from '../lib/articles';
 
 const articles = await getArticles();
 const cluster = await getCluster('The Neutron Star Problem');
 const flagship = articles[0];
+
+// Observatory Mode stations — derived from every article's `station:` block,
+// flattened to a plain serializable array for the React island.
+const stations = (await getStations()).map((a) => ({
+  order: a.data.order,
+  title: a.data.title,
+  id: a.id,
+  themeColor: a.data.themeColor,
+  heroImage: a.data.heroImage,
+  status: a.data.status,
+  question: a.data.station!.question,
+  known: a.data.station!.known,
+  unknown: a.data.station!.unknown,
+  continueLabel: a.data.station!.continueLabel,
+}));
 
 // Aggregate, dedupe citations across published articles for the Sources section.
 const seen = new Set<string>();
@@ -94,6 +110,24 @@ const premiseCards = [
       <MysteryTimeline articles={articles} />
     </section>
 
+    <!-- Observatory Mode -->
+    <section id="observatory" class="container-edge py-24">
+      <div class="reveal glass relative overflow-hidden rounded-3xl p-8 text-center md:p-16">
+        <div class="observatory-aura" aria-hidden="true"></div>
+        <div class="relative">
+          <p class="font-mono text-xs uppercase tracking-[0.3em] text-violet">The guided descent</p>
+          <h2 class="mt-3 font-display text-4xl font-bold text-paper text-glow sm:text-5xl">Observatory Mode</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-lg text-muted">
+            An immersive, station-by-station descent through the mysteries. Each station: one dramatic question,
+            one real fact, one genuine unknown. Ten stations. Ten questions. One universe acting suspicious.
+          </p>
+          <div class="mt-9 flex justify-center">
+            <ObservatoryMode stations={stations} client:visible />
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Known Unknown Index -->
     <section id="known-unknown-index" class="container-edge py-24">
       <div class="reveal mb-12 max-w-3xl">
@@ -160,3 +194,20 @@ const premiseCards = [
   </main>
   <Footer />
 </Layout>
+
+<style>
+  .observatory-aura {
+    position: absolute;
+    inset: -40%;
+    background: radial-gradient(circle at 50% 40%, rgba(124, 92, 255, 0.22), transparent 60%);
+    animation: aura 9s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes aura {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.08); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .observatory-aura { animation: none; }
+  }
+</style>
