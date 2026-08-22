@@ -1,4 +1,18 @@
+<div align="center">
+
+<img src="public/assets/observatory-hero.webp" alt="A lone observer facing a luminous cosmic observatory at the frontier of known physics" width="100%">
+
 # Where Physics Starts Sweating
+
+### A field guide to the places where confident equations start using nervous punctuation.
+
+[![Astro](https://img.shields.io/badge/Astro-static-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build)
+[![Science](https://img.shields.io/badge/claims-measured%20·%20inferred%20·%20speculative-5ad0e8?style=for-the-badge)](#scientific-honesty-is-a-build-rule)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
+
+**[Enter the observatory →](https://physics.nixfred.com)**
+
+</div>
 
 A cinematic, interactive field guide to the frontiers where modern physics
 becomes uncertain, incomplete, or deeply weird. Real science, honestly labeled:
@@ -9,6 +23,29 @@ Live: **https://physics.nixfred.com**
 > Physics knows a lot. The interesting part is where it starts sweating.
 
 ---
+
+## The frontiers
+
+Each field report starts with what has actually been measured, separates inference from observation, and labels the point where current models become uncertain.
+
+<table>
+<tr>
+<td width="50%"><img src="public/assets/black-holes.webp" alt="Black hole visualization"><br><strong>Black holes</strong><br>The boundary where gravity hides the evidence.</td>
+<td width="50%"><img src="public/assets/gravity-inside-neutron-star.webp" alt="Curved spacetime inside a neutron star"><br><strong>Neutron-star interiors</strong><br>Matter compressed beyond laboratory reach.</td>
+</tr>
+<tr>
+<td width="50%"><img src="public/assets/dark-matter.webp" alt="Galaxy embedded in a dark matter halo"><br><strong>Dark matter</strong><br>Gravity reveals something we still cannot identify.</td>
+<td width="50%"><img src="public/assets/dark-energy.webp" alt="Cosmic expansion visualization"><br><strong>Dark energy</strong><br>The expansion of the universe refuses to slow down.</td>
+</tr>
+<tr>
+<td width="50%"><img src="public/assets/cosmic-web.webp" alt="Filaments and voids of the cosmic web"><br><strong>The cosmic web</strong><br>Structure on scales too large to reproduce.</td>
+<td width="50%"><img src="public/assets/where-physics-stops-working.webp" alt="Equations dissolving at an unknown physical frontier"><br><strong>Where models break</strong><br>The seam between tested theory and honest uncertainty.</td>
+</tr>
+</table>
+
+## Scientific honesty is a build rule
+
+Every published article carries citations and classifies claims as `measured`, `inferred`, `model-dependent`, `hypothesis`, or `speculative`. A build-time citation check rejects published material with no sources or source URLs.
 
 ## Tech stack
 
